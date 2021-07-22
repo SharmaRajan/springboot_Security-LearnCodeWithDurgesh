@@ -23,17 +23,18 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 	http
 	.authorizeRequests()
-	.antMatchers("/public/**")  //or can be written as 	.antMatchers("/home","/login")
-	.permitAll()
+	.antMatchers("/signin").permitAll()
+	.antMatchers("/public/**").hasRole("NORMAL")  //or can be written as 	.antMatchers("/home","/login").permitAll()
+	.antMatchers("/users/**").hasRole("ADMIN")
 	.anyRequest()
 	.authenticated()
 	.and()
-	.httpBasic();
+	.formLogin(); //.httpBasic();
 	}
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication().withUser("akn").password(passwordEncoder().encode("akn")).roles("USER");
+		auth.inMemoryAuthentication().withUser("akn").password(passwordEncoder().encode("akn")).roles("NORMAL");
 		auth.inMemoryAuthentication().withUser("abc").password("abc").roles("ADMIN");
 	}
 	
